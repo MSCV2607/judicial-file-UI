@@ -1,0 +1,46 @@
+<div class="abrir-modal animacion fadeIn">
+  <div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="bg-white p-4 rounded shadow" style="min-width: 400px; position: relative;">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Registrarse</h5>
+        <button class="btn btn-sm btn-danger" (click)="cerrarModal()">X</button>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        
+
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-control" formControlName="nombre">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Apellidos</label>
+          <input type="text" class="form-control" formControlName="apellidos">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">DNI</label>
+          <input type="text" class="form-control" formControlName="DNI">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" formControlName="email">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Usuario</label>
+          <input type="text" class="form-control" formControlName="username">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Contraseña</label>
+          <input type="password" class="form-control" formControlName="password">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+      </form>
+    </div>
+  </div>
+</div>

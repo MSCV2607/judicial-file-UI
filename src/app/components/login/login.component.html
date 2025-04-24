@@ -15,9 +15,13 @@
   
         <div class="d-grid gap-2">
           <button type="submit" class="btn btn-primary">Entrar</button>
-          <button type="button" class="btn btn-success">Registrarte</button>
+          <button type="button" class="btn btn-success" (click)="mostrarModalRegistro()">Registrarte</button>
         </div>
       </form>
     </div>
   </div>
+  
+  @if (modalRegistroVisible) {
+    <app-register (cerrar)="cerrarModalRegistro()"></app-register>
+  }
   
