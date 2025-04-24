@@ -1,0 +1,5 @@
+.gradient-bg {
+    background: linear-gradient(to bottom, #0011ff, #0666c06e); /* azul → celeste */
+    min-height: 100vh; /* cubre toda la pantalla */
+  }
+  
