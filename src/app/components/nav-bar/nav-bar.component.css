@@ -1,0 +1,50 @@
+/* Barra lateral */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #343a40;
+    padding-top: 20px;
+  }
+  
+  /* Cabecera del sidebar */
+  .sidebar-header {
+    padding: 10px;
+    color: white;
+    background-color: #23272b;
+    font-size: 1.5rem;
+  }
+  
+  /* Estilos para las opciones del menú */
+  .nav {
+    padding-left: 0;
+  }
+  
+  .nav-item {
+    margin-bottom: 15px;
+  }
+  
+  .nav-link {
+    color: white;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: block;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: #007bff;
+  }
+  
+  .nav-link.active {
+    background-color: #0056b3;
+  }
+  
+  /* Iconos (Bootstrap Icons) */
+  .nav-link i {
+    margin-right: 10px;
+  }
+  
