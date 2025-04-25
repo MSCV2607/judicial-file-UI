@@ -1,21 +1,4 @@
-.toggle-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 2000;
-  font-size: 24px;
-  background-color: #343a40;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  transition: background-color 0.3s ease;
-}
-
-.toggle-btn:hover {
-  background-color: #495057;
-}
-
+/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -24,7 +7,8 @@
   height: 100vh;
   background-color: #343a40;
   padding-top: 20px;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
+  z-index: 1000;
 }
 
 .sidebar-closed {
@@ -32,10 +16,55 @@
 }
 
 .sidebar-header {
-  padding: 10px;
+  padding: 10px 20px;
   color: white;
   background-color: #23272b;
   font-size: 1.5rem;
 }
 
+/* Navegación */
+.nav {
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
+}
 
+.nav-item {
+  margin-bottom: 15px;
+}
+
+.nav-link {
+  color: white;
+  font-size: 1.1rem;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: block;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: #007bff;
+}
+
+.nav-link.active {
+  background-color: #0056b3;
+}
+
+/* Iconos */
+.nav-link i {
+  margin-right: 10px;
+}
+
+/* Botón ☰ */
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1050;
+  font-size: 30px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
