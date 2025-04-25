@@ -1,0 +1,18 @@
+/* Esto asegura que el cuerpo tenga altura completa y sin margen */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  /* app-container es el contenedor de todo */
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Este main crece para empujar el footer al fondo */
+  .main-content {
+    flex-grow: 1;
+  }
+  

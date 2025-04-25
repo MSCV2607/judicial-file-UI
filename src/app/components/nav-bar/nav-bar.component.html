@@ -1,11 +1,24 @@
-<div class="sidebar">
-  <div class="sidebar-header">
-    <h3 class="text-center text-white">Grupo Noctua</h3>
+<!-- Botón ☰ solo si el menú está cerrado -->
+@if (!isSidebarOpen) {
+  <button
+    class="btn btn-dark toggle-btn"
+    (mouseenter)="openSidebar()">
+    ☰
+  </button>
+}
+
+<!-- Sidebar con cierre automático al salir -->
+<div class="sidebar"
+     [ngClass]="{'sidebar-closed': !isSidebarOpen}"
+     (mouseleave)="closeSidebar()">
+
+  <div class="sidebar-header text-white">
+    <h3>Grupo Noctua</h3>
   </div>
-  
+
   <ul class="nav flex-column">
     <li class="nav-item">
-      <a class="nav-link active" routerLink="/perfil" routerLinkActive="active">
+      <a class="nav-link" routerLink="/perfil" routerLinkActive="active">
         <i class="bi bi-person-circle"></i> Perfil
       </a>
     </li>
@@ -26,5 +39,3 @@
     </li>
   </ul>
 </div>
-
-  
