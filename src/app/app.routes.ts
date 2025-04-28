@@ -38,5 +38,9 @@ export const routes: Routes = [
       {
         path: 'calendario',
         component: CalendarioComponent  // Ruta para calendario
-      }
+      },
+
+      { path: '', component: InicioComponent },
+      { path: 'calendario', component: CalendarioComponent },
+
     ];
