@@ -1,5 +1,5 @@
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
 export interface RegisterPayload {
@@ -20,10 +20,12 @@ export interface LoginPayload {
   providedIn: 'root'
 })
 export class AuthService {
-
   private apiUrl = 'http://localhost:8080/auth';
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.isBrowser = typeof window !== 'undefined';
+  }
 
   register(payload: RegisterPayload): Observable<string> {
     return this.http.post(`${this.apiUrl}/register`, payload, { responseType: 'text' });
@@ -32,20 +34,25 @@ export class AuthService {
   login(payload: LoginPayload): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, payload).pipe(
       tap((res: any) => {
-        localStorage.setItem('token', res.token);
+        if (this.isBrowser) {
+          localStorage.setItem('token', res.token);
+        }
       })
     );
   }
 
   logout() {
-    localStorage.removeItem('token');
+    if (this.isBrowser) {
+      localStorage.removeItem('token');
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return this.isBrowser ? localStorage.getItem('token') : null;
   }
 
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
 }
+
