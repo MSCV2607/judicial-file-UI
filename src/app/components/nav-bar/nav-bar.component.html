@@ -8,34 +8,46 @@
 }
 
 <!-- Sidebar con cierre automático al salir -->
-<div class="sidebar"
+<div class="sidebar d-flex flex-column justify-content-between"
      [ngClass]="{'sidebar-closed': !isSidebarOpen}"
      (mouseleave)="closeSidebar()">
 
-  <div class="sidebar-header text-white">
-    <h3>Grupo Noctua</h3>
+  <!-- Parte superior -->
+  <div>
+    <div class="sidebar-header text-white">
+      <h3>Grupo Noctua</h3>
+    </div>
+
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/perfil" routerLinkActive="active">
+          <i class="bi bi-person-circle"></i> Perfil
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/chat" routerLinkActive="active">
+          <i class="bi bi-chat"></i> Chat
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/carpeta" routerLinkActive="active">
+          <i class="bi bi-folder"></i> Carpeta
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/calendario" routerLinkActive="active">
+          <i class="bi bi-calendar"></i> Calendario
+        </a>
+      </li>
+    </ul>
   </div>
 
-  <ul class="nav flex-column">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/perfil" routerLinkActive="active">
-        <i class="bi bi-person-circle"></i> Perfil
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/chat" routerLinkActive="active">
-        <i class="bi bi-chat"></i> Chat
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/carpeta" routerLinkActive="active">
-        <i class="bi bi-folder"></i> Carpeta
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/calendario" routerLinkActive="active">
-        <i class="bi bi-calendar"></i> Calendario
-      </a>
-    </li>
-  </ul>
+  <!-- Parte inferior: botón cerrar sesión -->
+  <div class="logout-container">
+    <a class="nav-link logout-link" (click)="logout()">
+      <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+    </a>
+  </div>
+
 </div>
+

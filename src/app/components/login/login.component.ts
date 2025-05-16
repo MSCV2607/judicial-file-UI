@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { AuthStateService } from '../../services/auth-state.service';
+import { Router } from '@angular/router';
 import { RegisterComponent } from "../register/register.component";
 
 @Component({
@@ -17,7 +19,12 @@ export class LoginComponent {
   loginForm: FormGroup;
   mensajeError: string = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private authState: AuthStateService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -40,11 +47,12 @@ export class LoginComponent {
       };
 
       this.authService.login(payload).subscribe({
-        next: (res) => {
+        next: (res: string) => {
           this.mensajeError = '';
-          alert('Login exitoso'); 
+          this.authState.login(); 
+          this.router.navigate(['/dashboard']); 
         },
-        error: (err) => {
+        error: (err: any) => {
           this.mensajeError = err.error || 'Error inesperado al iniciar sesión.';
         }
       });
@@ -55,4 +63,3 @@ export class LoginComponent {
     }
   }
 }
-
