@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 export interface RegisterPayload {
   nombre: string;
@@ -8,6 +8,11 @@ export interface RegisterPayload {
   dni: string;
   username: string;
   email: string;
+  password: string;
+}
+
+export interface LoginPayload {
+  username: string;
   password: string;
 }
 
@@ -24,7 +29,23 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, payload, { responseType: 'text' });
   }
 
-  login(payload: { username: string; password: string }): Observable<string> {
-  return this.http.post(`${this.apiUrl}/login`, payload, { responseType: 'text' });
-}
+  login(payload: LoginPayload): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, payload).pipe(
+      tap((res: any) => {
+        localStorage.setItem('token', res.token);
+      })
+    );
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
 }
