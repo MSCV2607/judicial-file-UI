@@ -2,20 +2,35 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 
-export interface RegisterPayload { /* ... */ }
-export interface LoginPayload { /* ... */ }
+export interface RegisterPayload {
+  nombre: string;
+  apellido: string;
+  dni: string;
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginPayload {
+  username: string;
+  password: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/auth';
-  private isBrowser: boolean;
-  private authStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
+  private isBrowser = typeof window !== 'undefined';
+
+  private authStatus = new BehaviorSubject<boolean>(this.hasToken());
   authStatus$ = this.authStatus.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.isBrowser = typeof window !== 'undefined';
+  constructor(private http: HttpClient) {}
+
+  // ✔️ Verifica si hay token al inicio
+  private hasToken(): boolean {
+    return this.isBrowser && !!localStorage.getItem('token');
   }
 
   register(payload: RegisterPayload): Observable<string> {
@@ -35,8 +50,8 @@ export class AuthService {
 
   logout() {
     if (this.isBrowser) {
-      localStorage.removeItem('token');  
-      this.authStatus.next(false);   
+      localStorage.removeItem('token');
+      this.authStatus.next(false);
     }
   }
 
@@ -45,7 +60,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return this.hasToken();
   }
 }
 
