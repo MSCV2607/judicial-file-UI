@@ -50,7 +50,7 @@ export class LoginComponent {
         next: (res: string) => {
           this.mensajeError = '';
           this.authState.login(); 
-          this.router.navigate(['/dashboard']); 
+          this.router.navigate(['/perfil']); 
         },
         error: (err: any) => {
           this.mensajeError = err.error || 'Error inesperado al iniciar sesión.';
