@@ -23,4 +23,8 @@ export class AuthService {
   register(payload: RegisterPayload): Observable<string> {
     return this.http.post(`${this.apiUrl}/register`, payload, { responseType: 'text' });
   }
+
+  login(payload: { username: string; password: string }): Observable<string> {
+  return this.http.post(`${this.apiUrl}/login`, payload, { responseType: 'text' });
+}
 }
