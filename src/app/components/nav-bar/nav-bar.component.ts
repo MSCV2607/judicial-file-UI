@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthStateService } from '../../services/auth-state.service';
+import { AuthService } from '../../services/auth.service';  
 
 @Component({
   selector: 'app-nav-bar',
@@ -14,7 +14,7 @@ export class NavBarComponent {
   isSidebarOpen = false;
 
   constructor(
-    private authState: AuthStateService,
+    private authService: AuthService,  
     private router: Router
   ) {}
 
@@ -27,7 +27,7 @@ export class NavBarComponent {
   }
 
   logout() {
-    this.authState.logout();
+    this.authService.logout();            
     this.router.navigate(['/login']);
   }
 }

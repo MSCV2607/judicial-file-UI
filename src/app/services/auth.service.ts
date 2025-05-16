@@ -1,20 +1,9 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 
-export interface RegisterPayload {
-  nombre: string;
-  apellido: string;
-  dni: string;
-  username: string;
-  email: string;
-  password: string;
-}
-
-export interface LoginPayload {
-  username: string;
-  password: string;
-}
+export interface RegisterPayload { /* ... */ }
+export interface LoginPayload { /* ... */ }
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +11,8 @@ export interface LoginPayload {
 export class AuthService {
   private apiUrl = 'http://localhost:8080/auth';
   private isBrowser: boolean;
+  private authStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
+  authStatus$ = this.authStatus.asObservable();
 
   constructor(private http: HttpClient) {
     this.isBrowser = typeof window !== 'undefined';
@@ -36,6 +27,7 @@ export class AuthService {
       tap((res: any) => {
         if (this.isBrowser) {
           localStorage.setItem('token', res.token);
+          this.authStatus.next(true);
         }
       })
     );
@@ -43,7 +35,8 @@ export class AuthService {
 
   logout() {
     if (this.isBrowser) {
-      localStorage.removeItem('token');
+      localStorage.removeItem('token');  
+      this.authStatus.next(false);   
     }
   }
 
@@ -55,4 +48,5 @@ export class AuthService {
     return !!this.getToken();
   }
 }
+
 
