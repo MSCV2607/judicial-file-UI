@@ -1,0 +1,17 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.gradient-bg {
+  background: linear-gradient(to bottom, #000428, #004e92);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex-grow: 1;
+}
+
