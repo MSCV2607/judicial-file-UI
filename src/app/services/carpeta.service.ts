@@ -55,11 +55,13 @@ export class CarpetaService {
     });
   }
 
-  eliminarCarpeta(dni: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/eliminar?dni=${dni}`, {
-      headers: this.getAuthHeaders()
-    });
-  }
+  eliminarCarpeta(dni: string): Observable<string> {
+  return this.http.delete<string>(`${this.apiUrl}/eliminar?dni=${dni}`, {
+  headers: this.getAuthHeaders(),
+  responseType: 'text' as 'json'
+});
+
+}
 
   crearCarpeta(formData: FormData): Observable<string> {
   return this.http.post('http://localhost:8080/carpetas/crear', formData, {

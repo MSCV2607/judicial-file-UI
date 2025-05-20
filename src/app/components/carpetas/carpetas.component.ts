@@ -95,24 +95,31 @@ export class CarpetasComponent implements OnInit {
   }
 
   eliminarCarpeta(dni: string): void {
-    Swal.fire({
-      title: '¿Eliminar carpeta?',
-      text: 'Esta acción es irreversible',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.carpetaService.eliminarCarpeta(dni).subscribe({
-          next: () => {
-            Swal.fire('Eliminada', 'Carpeta eliminada correctamente', 'success');
-            this.listar();
-          },
-          error: () => Swal.fire('Error', 'No se pudo eliminar la carpeta', 'error')
-        });
-      }
-    });
-  }
+  Swal.fire({
+    title: '¿Eliminar carpeta?',
+    text: 'Esta acción es irreversible.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.carpetaService.eliminarCarpeta(dni).subscribe({
+        next: () => {
+          // ✅ Remueve carpeta de la vista sin recargar
+          this.carpetas = this.carpetas.filter(c => c.numeroCarpeta !== dni);
+
+          // ✅ Muestra mensaje correcto
+          Swal.fire('Eliminado', 'La carpeta fue eliminada correctamente.', 'success');
+        },
+        error: (err) => {
+          // 🧠 Mostrar el mensaje exacto si viene con texto
+          Swal.fire('Error', err?.error || 'Error al eliminar la carpeta', 'error');
+        }
+      });
+    }
+  });
+}
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
