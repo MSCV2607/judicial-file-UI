@@ -1,0 +1,14 @@
+.gradient-bg {
+  background: linear-gradient(to bottom, #000428, #004e92);
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.enproceso {
+  width: 500px; 
+  height: auto;
+  filter: drop-shadow(0 0 10px rgba(177, 10, 10, 0.5));
+}
