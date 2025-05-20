@@ -2,8 +2,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
+  min-height: 100vh; 
+  padding: 20px;
 }
+
+.gradient-bg {
+  background: linear-gradient(to bottom, #000428, #004e92);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.15); 
+  backdrop-filter: blur(10px);           
+  -webkit-backdrop-filter: blur(10px);   
+  border-radius: 15px;
+  padding: 30px;
+  color: white;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .card p {
   font-size: 1.1rem;
   margin-bottom: 12px;
