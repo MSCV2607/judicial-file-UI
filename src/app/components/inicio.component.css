@@ -1,4 +1,11 @@
 .gradient-bg {
-  background: linear-gradient(to bottom, #000428, #004e92); /* azul oscuro → azul claro */
-  min-height: 100vh; /* cubre toda la pantalla */
+  background: linear-gradient(to bottom, #000428, #004e92);
+  min-height: 100vh; 
+}
+
+.logo-img {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
 }
