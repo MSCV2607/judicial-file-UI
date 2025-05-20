@@ -1,1 +1,43 @@
-<p>carpetas works!</p>
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary">📁 Mis Carpetas</h2>
+
+  <!-- Barra de búsqueda -->
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Buscar por nombre, apellido o DNI" [(ngModel)]="busqueda">
+    <button class="btn btn-outline-primary" (click)="buscar()">Buscar</button>
+    <button class="btn btn-outline-secondary" (click)="listar()">Reset</button>
+  </div>
+
+  <!-- Lista de carpetas -->
+  <div *ngIf="carpetas.length === 0">
+    <p class="text-muted">No hay carpetas disponibles.</p>
+  </div>
+
+  <div *ngFor="let carpeta of carpetas" class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">{{ carpeta.descripcion }} <span class="badge bg-info">{{ carpeta.estado }}</span></h5>
+      <p class="card-text"><strong>DNI:</strong> {{ carpeta.numeroCarpeta }}</p>
+      <p class="card-text"><strong>Creación:</strong> {{ carpeta.fechaCreacion }}</p>
+      <p class="card-text"><strong>Última actualización:</strong> {{ carpeta.ultimaActualizacion | date:'short' }}</p>
+      <p class="card-text text-muted"><em>{{ carpeta.descripcionUltimaActualizacion }}</em></p>
+
+      <button class="btn btn-sm btn-outline-primary me-2" (click)="verArchivos(carpeta.numeroCarpeta)">📂 Ver Archivos</button>
+      <button class="btn btn-sm btn-outline-success me-2" (click)="descargarZip(carpeta.numeroCarpeta)">⬇️ Descargar ZIP</button>
+      <button class="btn btn-sm btn-outline-danger" (click)="eliminarCarpeta(carpeta.numeroCarpeta)">🗑️ Eliminar Carpeta</button>
+
+      <!-- Archivos -->
+      <div *ngIf="archivosVisibles[carpeta.numeroCarpeta]">
+        <hr>
+        <ul class="list-group">
+          <li *ngFor="let archivo of archivos[carpeta.numeroCarpeta]" class="list-group-item d-flex justify-content-between align-items-center">
+            {{ archivo }}
+            <div>
+              <button class="btn btn-sm btn-outline-secondary me-2" (click)="descargarArchivo(carpeta.numeroCarpeta, archivo)">⬇️</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="eliminarArchivo(carpeta.numeroCarpeta, archivo)">🗑️</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
