@@ -1,33 +1,63 @@
 <div class="gradient-bg">
-
-
   <div class="container mt-4">
-    <h2 class="mb-4 text-primary">📁 Mis Carpetas</h2>
-  
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="text-primary">📁 Mis Carpetas</h2>
+      <button class="btn btn-success" (click)="mostrarFormulario = !mostrarFormulario">
+        {{ mostrarFormulario ? 'Ocultar formulario' : 'Crear nuevo expediente' }}
+      </button>
+    </div>
+
+    <!-- Formulario de creación -->
+    <div *ngIf="mostrarFormulario" class="card p-3 mb-4">
+      <h5>Nuevo expediente</h5>
+      <form (ngSubmit)="crearCarpeta()" #formulario="ngForm">
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="nombre" [(ngModel)]="nombre" placeholder="Nombre" required />
+          </div>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="apellido" [(ngModel)]="apellido" placeholder="Apellido" required />
+          </div>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="dni" [(ngModel)]="dni" placeholder="DNI" required />
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <input type="file" class="form-control" (change)="onFileSelected($event)" multiple required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Crear expediente</button>
+      </form>
+    </div>
+
     <!-- Barra de búsqueda -->
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="Buscar por nombre, apellido o DNI" [(ngModel)]="busqueda">
       <button class="btn btn-outline-primary" (click)="buscar()">Buscar</button>
       <button class="btn btn-outline-secondary" (click)="listar()">Reset</button>
     </div>
-  
+
     <!-- Lista de carpetas -->
     <div *ngIf="carpetas.length === 0">
       <p class="text-muted">No hay carpetas disponibles.</p>
     </div>
-  
+
     <div *ngFor="let carpeta of carpetas" class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h5 class="card-title">{{ carpeta.descripcion }} <span class="badge bg-info">{{ carpeta.estado }}</span></h5>
+        <h5 class="card-title">
+          {{ carpeta.descripcion }}
+          <span class="badge bg-info">{{ carpeta.estado }}</span>
+        </h5>
         <p class="card-text"><strong>DNI:</strong> {{ carpeta.numeroCarpeta }}</p>
         <p class="card-text"><strong>Creación:</strong> {{ carpeta.fechaCreacion }}</p>
         <p class="card-text"><strong>Última actualización:</strong> {{ carpeta.ultimaActualizacion | date:'short' }}</p>
         <p class="card-text text-muted"><em>{{ carpeta.descripcionUltimaActualizacion }}</em></p>
-  
+
         <button class="btn btn-sm btn-outline-primary me-2" (click)="verArchivos(carpeta.numeroCarpeta)">📂 Ver Archivos</button>
         <button class="btn btn-sm btn-outline-success me-2" (click)="descargarZip(carpeta.numeroCarpeta)">⬇️ Descargar ZIP</button>
         <button class="btn btn-sm btn-outline-danger" (click)="eliminarCarpeta(carpeta.numeroCarpeta)">🗑️ Eliminar Carpeta</button>
-  
+
         <!-- Archivos -->
         <div *ngIf="archivosVisibles[carpeta.numeroCarpeta]">
           <hr>
@@ -44,6 +74,5 @@
       </div>
     </div>
   </div>
-
-
 </div>
+

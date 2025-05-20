@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CarpetaService } from '../../services/carpeta.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-carpetas',
@@ -17,6 +18,12 @@ export class CarpetasComponent implements OnInit {
   archivos: { [dni: string]: string[] } = {};
   archivosVisibles: { [dni: string]: boolean } = {};
 
+  mostrarFormulario = false;
+  nombre: string = '';
+  apellido: string = '';
+  dni: string = '';
+  archivosNuevos: File[] = [];
+
   constructor(private carpetaService: CarpetaService) {}
 
   ngOnInit(): void {
@@ -25,8 +32,8 @@ export class CarpetasComponent implements OnInit {
 
   listar(): void {
     this.carpetaService.listarCarpetas().subscribe({
-      next: (data: any[]) => this.carpetas = data,
-      error: () => alert('Error al cargar carpetas')
+      next: (data) => this.carpetas = data,
+      error: () => Swal.fire('Error', 'No se pudieron cargar las carpetas', 'error')
     });
   }
 
@@ -37,8 +44,8 @@ export class CarpetasComponent implements OnInit {
     }
 
     this.carpetaService.buscarCarpetas(this.busqueda).subscribe({
-      next: (data: any[]) => this.carpetas = data,
-      error: () => alert('Error en la búsqueda')
+      next: (data) => this.carpetas = data,
+      error: () => Swal.fire('Error', 'Error en la búsqueda', 'error')
     });
   }
 
@@ -53,61 +60,96 @@ export class CarpetasComponent implements OnInit {
         this.archivos[dni] = data;
         this.archivosVisibles[dni] = true;
       },
-      error: () => alert('Error al obtener archivos')
+      error: () => Swal.fire('Error', 'Error al obtener archivos', 'error')
     });
   }
 
   descargarZip(dni: string): void {
-    this.carpetaService.descargarCarpetaZip(dni).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${dni}.zip`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: () => alert('Error al descargar la carpeta')
-    });
+    this.carpetaService.descargarCarpetaZip(dni);
   }
 
   descargarArchivo(dni: string, archivo: string): void {
-    this.carpetaService.descargarArchivo(dni, archivo).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = archivo;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: () => alert('Error al descargar archivo')
-    });
+    this.carpetaService.descargarArchivo(dni, archivo);
   }
 
   eliminarArchivo(dni: string, archivo: string): void {
-    const descripcion = prompt('¿Qué estás eliminando? Escribe una descripción:');
-    if (!descripcion) return;
-
-    this.carpetaService.eliminarArchivo(dni, archivo, descripcion).subscribe({
-      next: () => {
-        alert('Archivo eliminado');
-        this.verArchivos(dni);
-      },
-      error: () => alert('Error al eliminar archivo')
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Vas a eliminar un archivo. Escribe una descripción:',
+      input: 'text',
+      inputPlaceholder: 'Descripción del cambio',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar'
+    }).then(result => {
+      if (result.isConfirmed && result.value) {
+        const descripcion = result.value;
+        this.carpetaService.eliminarArchivo(dni, archivo, descripcion).subscribe({
+          next: () => {
+            Swal.fire('Eliminado', 'Archivo eliminado correctamente', 'success');
+            this.verArchivos(dni);
+          },
+          error: () => Swal.fire('Error', 'No se pudo eliminar el archivo', 'error')
+        });
+      }
     });
   }
 
   eliminarCarpeta(dni: string): void {
-    if (!confirm('¿Seguro que deseas eliminar la carpeta completa?')) return;
+    Swal.fire({
+      title: '¿Eliminar carpeta?',
+      text: 'Esta acción es irreversible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.carpetaService.eliminarCarpeta(dni).subscribe({
+          next: () => {
+            Swal.fire('Eliminada', 'Carpeta eliminada correctamente', 'success');
+            this.listar();
+          },
+          error: () => Swal.fire('Error', 'No se pudo eliminar la carpeta', 'error')
+        });
+      }
+    });
+  }
 
-    this.carpetaService.eliminarCarpeta(dni).subscribe({
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.archivosNuevos = Array.from(input.files);
+    }
+  }
+
+  crearCarpeta(): void {
+    if (!this.nombre || !this.apellido || !this.dni || this.archivosNuevos.length === 0) {
+      Swal.fire('Faltan datos', 'Completá todos los campos y seleccioná archivos', 'warning');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('nombre', this.nombre);
+    formData.append('apellido', this.apellido);
+    formData.append('dni', this.dni);
+    this.archivosNuevos.forEach(file => formData.append('archivos', file));
+
+    this.carpetaService.crearCarpeta(formData).subscribe({
       next: () => {
-        alert('Carpeta eliminada');
+        Swal.fire('Éxito', 'Carpeta creada correctamente', 'success');
+        this.mostrarFormulario = false;
+        this.nombre = '';
+        this.apellido = '';
+        this.dni = '';
+        this.archivosNuevos = [];
         this.listar();
       },
-      error: () => alert('Error al eliminar carpeta')
+      error: (err) => {
+        const msg = err.status === 400 ? err.error : 'Error al crear carpeta';
+        Swal.fire('Error', msg, 'error');
+      }
     });
   }
 }
+
+
 

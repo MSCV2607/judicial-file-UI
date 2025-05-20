@@ -60,5 +60,15 @@ export class CarpetaService {
       headers: this.getAuthHeaders()
     });
   }
+
+  crearCarpeta(formData: FormData): Observable<string> {
+  return this.http.post('http://localhost:8080/carpetas/crear', formData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`
+    },
+    responseType: 'text'
+  });
+}
+
 }
 
