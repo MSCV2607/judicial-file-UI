@@ -67,14 +67,19 @@
         <div class="row mb-1">
           <div class="col-sm-6">
             <strong>Número:</strong>
-            <a *ngIf="carpeta.clientes?.[0]?.telefono && carpeta.clientes[0].telefono !== 'N/A'" [href]="'https://wa.me/' + carpeta.clientes[0].telefono" target="_blank">
+            <a *ngIf="carpeta.clientes?.[0]?.telefono && carpeta.clientes[0].telefono !== 'N/A'" 
+               [href]="'https://wa.me/' + carpeta.clientes[0].telefono" 
+               target="_blank" 
+               style="text-decoration: none; color: inherit;">
               {{ carpeta.clientes[0].telefono }}
             </a>
             <span *ngIf="!carpeta.clientes?.[0]?.telefono || carpeta.clientes[0].telefono === 'N/A'">N/A</span>
           </div>
           <div class="col-sm-6">
             <strong>Correo:</strong>
-            <a *ngIf="carpeta.clientes?.[0]?.correo && carpeta.clientes[0].correo !== 'N/A'" [href]="'mailto:' + carpeta.clientes[0].correo">
+            <a *ngIf="carpeta.clientes?.[0]?.correo && carpeta.clientes[0].correo !== 'N/A'" 
+               [href]="'mailto:' + carpeta.clientes[0].correo" 
+               style="text-decoration: none; color: inherit;">
               {{ carpeta.clientes[0].correo }}
             </a>
             <span *ngIf="!carpeta.clientes?.[0]?.correo || carpeta.clientes[0].correo === 'N/A'">N/A</span>
@@ -118,3 +123,4 @@
     </div>
   </div>
 </div>
+
