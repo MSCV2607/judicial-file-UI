@@ -1,44 +1,104 @@
-<div class="container mt-4">
-  <h2>Mi Perfil</h2>
+<div class="container px-3" style="padding-top: 0 !important; margin-top: 0 !important;">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="card shadow-lg border-0 rounded-4" style="margin-top: 0 !important;">
+        <div class="card-body p-3 pt-2" style="color: black;"> <!-- AQUI SE APLICA EL COLOR NEGRO -->
 
-  <div class="alert alert-info mt-3" *ngIf="mensaje">{{ mensaje }}</div>
+          <h2 class="text-center mb-2" style="margin-top: 0 !important;">Mi Perfil</h2>
 
-  <form (ngSubmit)="guardarCambios()" class="mt-4">
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" id="nombre" class="form-control" [(ngModel)]="perfil.nombre" name="nombre" required />
+          <div *ngIf="mensaje" class="alert alert-info text-center">
+            {{ mensaje }}
+          </div>
+
+          <div class="row">
+            <!-- Formulario -->
+            <div class="col-md-7">
+              <form (ngSubmit)="guardarCambios()">
+                <div class="mb-2">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    class="form-control"
+                    [(ngModel)]="perfil.nombre"
+                    name="nombre"
+                    required
+                  />
+                </div>
+
+                <div class="mb-2">
+                  <label for="apellido" class="form-label">Apellido</label>
+                  <input
+                    type="text"
+                    id="apellido"
+                    class="form-control"
+                    [(ngModel)]="perfil.apellido"
+                    name="apellido"
+                    required
+                  />
+                </div>
+
+                <div class="mb-2">
+                  <label for="username" class="form-label">Usuario</label>
+                  <input
+                    type="text"
+                    id="username"
+                    class="form-control"
+                    [value]="perfil.username"
+                    disabled
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Correo</label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="form-control"
+                    [(ngModel)]="perfil.email"
+                    name="email"
+                    required
+                  />
+                </div>
+
+                <div class="text-center mt-2">
+                  <button type="submit" class="btn btn-primary px-4">
+                    Guardar Cambios
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Imagen de perfil -->
+            <div class="col-md-5 text-center">
+              <h5 class="mb-3">Foto de Perfil</h5>
+
+              <img
+                *ngIf="imagenUrl"
+                [src]="imagenUrl"
+                alt="Foto de perfil"
+                class="rounded-circle img-thumbnail mb-2"
+                style="width: 150px; height: 150px; object-fit: cover;"
+              />
+              <p *ngIf="!imagenUrl" class="text-muted mb-2">
+                No se ha subido una foto de perfil.
+              </p>
+
+              <input
+                type="file"
+                (change)="seleccionarFoto($event)"
+                class="form-control mb-2"
+                accept="image/*"
+              />
+
+              <button (click)="subirFoto()" class="btn btn-success">
+                Subir Nueva Foto
+              </button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
     </div>
-
-    <div class="mb-3">
-      <label for="apellido" class="form-label">Apellido</label>
-      <input type="text" id="apellido" class="form-control" [(ngModel)]="perfil.apellido" name="apellido" required />
-    </div>
-
-    <div class="mb-3">
-      <label for="username" class="form-label">Usuario</label>
-      <input type="text" id="username" class="form-control" [value]="perfil.username" disabled />
-    </div>
-
-    <div class="mb-3">
-      <label for="email" class="form-label">Correo</label>
-      <input type="email" id="email" class="form-control" [(ngModel)]="perfil.email" name="email" required />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-  </form>
-
-  <hr class="my-5" />
-
-  <h4>Foto de Perfil</h4>
-
-  <div class="mb-3">
-    <img *ngIf="imagenUrl" [src]="imagenUrl" alt="Foto de perfil" class="img-thumbnail" style="max-width: 200px;" />
-    <p *ngIf="!imagenUrl" class="text-muted">No se ha subido una foto de perfil.</p>
   </div>
-
-  <div class="mb-3">
-    <input type="file" (change)="seleccionarFoto($event)" class="form-control" accept="image/*" />
-  </div>
-
-  <button (click)="subirFoto()" class="btn btn-success">Subir Nueva Foto</button>
 </div>
