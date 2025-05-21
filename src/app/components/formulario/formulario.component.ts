@@ -15,6 +15,7 @@ export class FormularioComponent {
   nombre: string = '';
   apellido: string = '';
   dni: string = '';
+  edad: number | null = null;
   telefono: string = '';
   correo: string = '';
   archivos: File[] = [];
@@ -40,6 +41,8 @@ export class FormularioComponent {
     formData.append('dni', this.dni);
     formData.append('telefono', this.telefono || 'N/A');
     formData.append('correo', this.correo || 'N/A');
+    formData.append('edad', this.edad !== null ? String(this.edad) : '0');
+
     this.archivos.forEach(file => formData.append('archivos', file));
 
     this.carpetaService.crearCarpeta(formData).subscribe({
@@ -48,6 +51,7 @@ export class FormularioComponent {
         this.nombre = '';
         this.apellido = '';
         this.dni = '';
+        this.edad = null;
         this.telefono = '';
         this.correo = '';
         this.archivos = [];

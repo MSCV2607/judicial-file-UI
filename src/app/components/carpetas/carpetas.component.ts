@@ -22,6 +22,7 @@ export class CarpetasComponent implements OnInit {
   nombre: string = '';
   apellido: string = '';
   dni: string = '';
+  edad: number | null = null;
   telefono: string = '';
   correo: string = '';
   archivosNuevos: File[] = [];
@@ -140,6 +141,7 @@ export class CarpetasComponent implements OnInit {
     formData.append('nombre', this.nombre);
     formData.append('apellido', this.apellido);
     formData.append('dni', this.dni);
+    formData.append('edad', this.edad !== null ? String(this.edad) : '0');
     formData.append('telefono', this.telefono || 'N/A');
     formData.append('correo', this.correo || 'N/A');
 
@@ -152,6 +154,7 @@ export class CarpetasComponent implements OnInit {
         this.nombre = '';
         this.apellido = '';
         this.dni = '';
+        this.edad = null;
         this.telefono = '';
         this.correo = '';
         this.archivosNuevos = [];
@@ -196,7 +199,3 @@ export class CarpetasComponent implements OnInit {
       });
   }
 }
-
-
-
-
