@@ -35,19 +35,44 @@ export class CarpetaService {
     });
   }
 
-  descargarCarpetaZip(dni: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/descargar?dni=${dni}`, {
-      headers: this.getAuthHeaders(),
-      responseType: 'blob'
-    });
-  }
+  descargarCarpetaZip(dni: string): void {
+  this.http.get(`${this.apiUrl}/descargar?dni=${dni}`, {
+    headers: this.getAuthHeaders(),
+    responseType: 'blob'
+  }).subscribe({
+    next: (blob: Blob) => {
+      const a = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = `${dni}.zip`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: () => {
+      alert('Error al descargar el ZIP');
+    }
+  });
+}
 
-  descargarArchivo(dni: string, archivo: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/archivo?dni=${dni}&nombreArchivo=${archivo}`, {
-      headers: this.getAuthHeaders(),
-      responseType: 'blob'
-    });
-  }
+  descargarArchivo(dni: string, nombreArchivo: string): void {
+  this.http.get(`${this.apiUrl}/archivo?dni=${dni}&nombreArchivo=${nombreArchivo}`, {
+    headers: this.getAuthHeaders(),
+    responseType: 'blob'
+  }).subscribe({
+    next: (blob: Blob) => {
+      const a = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = nombreArchivo;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: () => {
+      alert('Error al descargar el archivo');
+    }
+  });
+}
+
 
   eliminarArchivo(dni: string, archivo: string, descripcion: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/archivo?dni=${dni}&nombreArchivo=${archivo}&descripcion=${descripcion}`, {
