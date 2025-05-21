@@ -72,5 +72,19 @@ export class CarpetaService {
   });
 }
 
+agregarArchivos(dni: string, archivos: File[], descripcion: string): Observable<string> {
+  const formData = new FormData();
+  formData.append('dni', dni);
+  formData.append('descripcion', descripcion);
+  archivos.forEach(file => formData.append('archivos', file));
+
+  return this.http.post<string>(`${this.apiUrl}/actualizar`, formData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`
+    },
+    responseType: 'text' as 'json'
+  });
+}
+
 }
 

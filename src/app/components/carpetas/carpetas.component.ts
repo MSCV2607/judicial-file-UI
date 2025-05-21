@@ -24,6 +24,10 @@ export class CarpetasComponent implements OnInit {
   dni: string = '';
   archivosNuevos: File[] = [];
 
+dniParaActualizar: string = '';
+archivosParaActualizar: File[] = [];
+descripcionActualizacion: string = '';
+
   constructor(private carpetaService: CarpetaService) {}
 
   ngOnInit(): void {
@@ -156,6 +160,40 @@ export class CarpetasComponent implements OnInit {
       }
     });
   }
+
+  onSeleccionarArchivosActualizar(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files) {
+    this.archivosParaActualizar = Array.from(input.files);
+  }
+}
+
+abrirFormularioActualizacion(dni: string): void {
+  this.dniParaActualizar = dni;
+  this.descripcionActualizacion = '';
+  this.archivosParaActualizar = [];
+}
+
+subirArchivosActualizados(): void {
+  if (!this.archivosParaActualizar.length || !this.descripcionActualizacion) {
+    Swal.fire('Error', 'Seleccioná archivos y escribí una descripción', 'warning');
+    return;
+  }
+
+  this.carpetaService.agregarArchivos(this.dniParaActualizar, this.archivosParaActualizar, this.descripcionActualizacion)
+    .subscribe({
+      next: () => {
+        Swal.fire('Éxito', 'Archivos actualizados correctamente', 'success');
+        this.dniParaActualizar = '';
+        this.archivosParaActualizar = [];
+        this.descripcionActualizacion = '';
+        this.listar();
+      },
+      error: () => Swal.fire('Error', 'No se pudo actualizar la carpeta', 'error')
+    });
+}
+
+
 }
 
 
