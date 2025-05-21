@@ -28,9 +28,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // ✔️ Verifica si hay token al inicio
   private hasToken(): boolean {
-    return this.isBrowser && !!localStorage.getItem('token');
+    return this.isBrowser && !!localStorage.getItem('jwtToken');
   }
 
   register(payload: RegisterPayload): Observable<string> {
@@ -41,7 +40,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, payload).pipe(
       tap((res: any) => {
         if (this.isBrowser) {
-          localStorage.setItem('token', res.token);
+          localStorage.setItem('jwtToken', res.token);
           this.authStatus.next(true);
         }
       })
@@ -50,18 +49,16 @@ export class AuthService {
 
   logout() {
     if (this.isBrowser) {
-      localStorage.removeItem('token');
+      localStorage.removeItem('jwtToken');
       this.authStatus.next(false);
     }
   }
 
   getToken(): string | null {
-    return this.isBrowser ? localStorage.getItem('token') : null;
+    return this.isBrowser ? localStorage.getItem('jwtToken') : null;
   }
 
   isLoggedIn(): boolean {
     return this.hasToken();
   }
 }
-
-

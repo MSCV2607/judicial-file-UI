@@ -3,14 +3,13 @@ import {
   HttpInterceptor,
   HttpRequest,
   HttpHandler,
-  HttpEvent
+  HttpEvent,
+  HTTP_INTERCEPTORS
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
@@ -29,3 +28,11 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(req);
   }
 }
+
+// Este es el provider que se usa en main.ts
+export const authInterceptorProvider = {
+  provide: HTTP_INTERCEPTORS,
+  useClass: AuthInterceptor,
+  multi: true
+};
+
