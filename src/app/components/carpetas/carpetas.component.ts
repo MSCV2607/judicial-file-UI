@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CarpetaService } from '../../services/carpeta.service';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from "../nav-bar/nav-bar.component";
 
 @Component({
   selector: 'app-carpetas',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, NavBarComponent],
   templateUrl: './carpetas.component.html',
   styleUrls: ['./carpetas.component.css']
 })
