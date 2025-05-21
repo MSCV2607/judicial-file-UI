@@ -74,11 +74,13 @@ export class CarpetaService {
 }
 
 
-  eliminarArchivo(dni: string, archivo: string, descripcion: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/archivo?dni=${dni}&nombreArchivo=${archivo}&descripcion=${descripcion}`, {
-      headers: this.getAuthHeaders()
-    });
-  }
+  eliminarArchivo(dni: string, archivo: string, descripcion: string): Observable<string> {
+  return this.http.delete<string>(`${this.apiUrl}/archivo?dni=${dni}&nombreArchivo=${archivo}&descripcion=${descripcion}`, {
+    headers: this.getAuthHeaders(),
+    responseType: 'text' as 'json'
+  });
+}
+
 
   eliminarCarpeta(dni: string): Observable<string> {
   return this.http.delete<string>(`${this.apiUrl}/eliminar?dni=${dni}`, {
