@@ -15,6 +15,8 @@ export class FormularioComponent {
   nombre: string = '';
   apellido: string = '';
   dni: string = '';
+  telefono: string = '';
+  correo: string = '';
   archivos: File[] = [];
 
   constructor(private carpetaService: CarpetaService) {}
@@ -36,6 +38,8 @@ export class FormularioComponent {
     formData.append('nombre', this.nombre);
     formData.append('apellido', this.apellido);
     formData.append('dni', this.dni);
+    formData.append('telefono', this.telefono || 'N/A');
+    formData.append('correo', this.correo || 'N/A');
     this.archivos.forEach(file => formData.append('archivos', file));
 
     this.carpetaService.crearCarpeta(formData).subscribe({
@@ -44,6 +48,8 @@ export class FormularioComponent {
         this.nombre = '';
         this.apellido = '';
         this.dni = '';
+        this.telefono = '';
+        this.correo = '';
         this.archivos = [];
       },
       error: (err) => {

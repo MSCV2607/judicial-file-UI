@@ -22,11 +22,13 @@ export class CarpetasComponent implements OnInit {
   nombre: string = '';
   apellido: string = '';
   dni: string = '';
+  telefono: string = '';
+  correo: string = '';
   archivosNuevos: File[] = [];
 
-dniParaActualizar: string = '';
-archivosParaActualizar: File[] = [];
-descripcionActualizacion: string = '';
+  dniParaActualizar: string = '';
+  archivosParaActualizar: File[] = [];
+  descripcionActualizacion: string = '';
 
   constructor(private carpetaService: CarpetaService) {}
 
@@ -99,31 +101,27 @@ descripcionActualizacion: string = '';
   }
 
   eliminarCarpeta(dni: string): void {
-  Swal.fire({
-    title: '¿Eliminar carpeta?',
-    text: 'Esta acción es irreversible.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.carpetaService.eliminarCarpeta(dni).subscribe({
-        next: () => {
-          // ✅ Remueve carpeta de la vista sin recargar
-          this.carpetas = this.carpetas.filter(c => c.numeroCarpeta !== dni);
-
-          // ✅ Muestra mensaje correcto
-          Swal.fire('Eliminado', 'La carpeta fue eliminada correctamente.', 'success');
-        },
-        error: (err) => {
-          // 🧠 Mostrar el mensaje exacto si viene con texto
-          Swal.fire('Error', err?.error || 'Error al eliminar la carpeta', 'error');
-        }
-      });
-    }
-  });
-}
+    Swal.fire({
+      title: '¿Eliminar carpeta?',
+      text: 'Esta acción es irreversible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.carpetaService.eliminarCarpeta(dni).subscribe({
+          next: () => {
+            this.carpetas = this.carpetas.filter(c => c.numeroCarpeta !== dni);
+            Swal.fire('Eliminado', 'La carpeta fue eliminada correctamente.', 'success');
+          },
+          error: (err) => {
+            Swal.fire('Error', err?.error || 'Error al eliminar la carpeta', 'error');
+          }
+        });
+      }
+    });
+  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -142,6 +140,9 @@ descripcionActualizacion: string = '';
     formData.append('nombre', this.nombre);
     formData.append('apellido', this.apellido);
     formData.append('dni', this.dni);
+    formData.append('telefono', this.telefono || 'N/A');
+    formData.append('correo', this.correo || 'N/A');
+
     this.archivosNuevos.forEach(file => formData.append('archivos', file));
 
     this.carpetaService.crearCarpeta(formData).subscribe({
@@ -151,6 +152,8 @@ descripcionActualizacion: string = '';
         this.nombre = '';
         this.apellido = '';
         this.dni = '';
+        this.telefono = '';
+        this.correo = '';
         this.archivosNuevos = [];
         this.listar();
       },
@@ -162,39 +165,38 @@ descripcionActualizacion: string = '';
   }
 
   onSeleccionarArchivosActualizar(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files) {
-    this.archivosParaActualizar = Array.from(input.files);
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.archivosParaActualizar = Array.from(input.files);
+    }
+  }
+
+  abrirFormularioActualizacion(dni: string): void {
+    this.dniParaActualizar = dni;
+    this.descripcionActualizacion = '';
+    this.archivosParaActualizar = [];
+  }
+
+  subirArchivosActualizados(): void {
+    if (!this.archivosParaActualizar.length || !this.descripcionActualizacion) {
+      Swal.fire('Error', 'Seleccioná archivos y escribí una descripción', 'warning');
+      return;
+    }
+
+    this.carpetaService.agregarArchivos(this.dniParaActualizar, this.archivosParaActualizar, this.descripcionActualizacion)
+      .subscribe({
+        next: () => {
+          Swal.fire('Éxito', 'Archivos actualizados correctamente', 'success');
+          this.dniParaActualizar = '';
+          this.archivosParaActualizar = [];
+          this.descripcionActualizacion = '';
+          this.listar();
+        },
+        error: () => Swal.fire('Error', 'No se pudo actualizar la carpeta', 'error')
+      });
   }
 }
 
-abrirFormularioActualizacion(dni: string): void {
-  this.dniParaActualizar = dni;
-  this.descripcionActualizacion = '';
-  this.archivosParaActualizar = [];
-}
-
-subirArchivosActualizados(): void {
-  if (!this.archivosParaActualizar.length || !this.descripcionActualizacion) {
-    Swal.fire('Error', 'Seleccioná archivos y escribí una descripción', 'warning');
-    return;
-  }
-
-  this.carpetaService.agregarArchivos(this.dniParaActualizar, this.archivosParaActualizar, this.descripcionActualizacion)
-    .subscribe({
-      next: () => {
-        Swal.fire('Éxito', 'Archivos actualizados correctamente', 'success');
-        this.dniParaActualizar = '';
-        this.archivosParaActualizar = [];
-        this.descripcionActualizacion = '';
-        this.listar();
-      },
-      error: () => Swal.fire('Error', 'No se pudo actualizar la carpeta', 'error')
-    });
-}
-
-
-}
 
 
 
