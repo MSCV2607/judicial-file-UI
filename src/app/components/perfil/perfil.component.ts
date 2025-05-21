@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ← necesario para ngModel
+import { FormsModule } from '@angular/forms'; 
 import { HttpClientModule } from '@angular/common/http';
 import { PerfilService, PerfilUsuarioDTO } from '../../services/perfil.service';
 
 @Component({
   selector: 'app-perfil',
-  standalone: true, // ← importante si estás usando Angular 15+ standalone
-  imports: [CommonModule, FormsModule, HttpClientModule], // ← importa FormsModule acá
+  standalone: true,
+  imports: [CommonModule, FormsModule, HttpClientModule], 
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css']
 })
