@@ -44,11 +44,27 @@
       </form>
     </div>
 
-    <div class="input-group mb-3">
+    <!-- Select de orden -->
+  <div class="mb-2" style="width: 250px;">
+    <select class="form-select" [(ngModel)]="ordenSeleccionado" (change)="ordenarCarpetas()">
+      <option value="">Ordenar por...</option>
+      <option value="nombreAZ">Nombre (A-Z)</option>
+      <option value="nombreZA">Nombre (Z-A)</option>
+      <option value="actualizacionReciente">Última actualización (reciente)</option>
+      <option value="actualizacionVieja">Última actualización (antigua)</option>
+      <option value="creacionNueva">Creación (más reciente)</option>
+      <option value="creacionVieja">Creación (más antigua)</option>
+    </select>
+  </div>
+
+    <div class="input-group mb-2">
       <input type="text" class="form-control" placeholder="Buscar por nombre, apellido o DNI" [(ngModel)]="busqueda">
       <button class="btn btn-outline-primary" (click)="buscar()">Buscar</button>
       <button class="btn btn-outline-secondary" (click)="listar()">Reset</button>
     </div>
+
+    
+
 
     <div *ngIf="carpetas.length === 0">
       <p class="text-muted">No hay carpetas disponibles.</p>

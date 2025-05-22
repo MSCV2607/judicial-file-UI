@@ -34,6 +34,8 @@ export class CarpetasComponent implements OnInit {
 
   dniUnirse: string = '';
 
+  ordenSeleccionado: string = '';
+
   constructor(private carpetaService: CarpetaService) {}
 
   ngOnInit(): void {
@@ -218,5 +220,30 @@ export class CarpetasComponent implements OnInit {
       Swal.fire('Error', err?.error || 'No se pudo unir a la carpeta', 'error');
     }
   });
+}
+
+ordenarCarpetas(): void {
+  switch (this.ordenSeleccionado) {
+    case 'nombreAZ':
+      this.carpetas.sort((a, b) => a.descripcion.localeCompare(b.descripcion));
+      break;
+    case 'nombreZA':
+      this.carpetas.sort((a, b) => b.descripcion.localeCompare(a.descripcion));
+      break;
+    case 'actualizacionReciente':
+      this.carpetas.sort((a, b) => new Date(b.ultimaActualizacion).getTime() - new Date(a.ultimaActualizacion).getTime());
+      break;
+    case 'actualizacionVieja':
+      this.carpetas.sort((a, b) => new Date(a.ultimaActualizacion).getTime() - new Date(b.ultimaActualizacion).getTime());
+      break;
+    case 'creacionNueva':
+      this.carpetas.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
+      break;
+    case 'creacionVieja':
+      this.carpetas.sort((a, b) => new Date(a.fechaCreacion).getTime() - new Date(b.fechaCreacion).getTime());
+      break;
+    default:
+      break;
+  }
 }
 }
