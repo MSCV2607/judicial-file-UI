@@ -32,6 +32,8 @@ export class CarpetasComponent implements OnInit {
   archivosParaActualizar: File[] = [];
   descripcionActualizacion: string = '';
 
+  dniUnirse: string = '';
+
   constructor(private carpetaService: CarpetaService) {}
 
   ngOnInit(): void {
@@ -199,4 +201,22 @@ export class CarpetasComponent implements OnInit {
         error: () => Swal.fire('Error', 'No se pudo actualizar la carpeta', 'error')
       });
   }
+
+  unirseACarpeta(): void {
+  if (!this.dniUnirse.trim()) {
+    Swal.fire('Error', 'Ingresá un DNI para unirte a la carpeta', 'warning');
+    return;
+  }
+
+  this.carpetaService.unirseACarpeta(this.dniUnirse.trim()).subscribe({
+    next: () => {
+      Swal.fire('Éxito', 'Te uniste a la carpeta correctamente', 'success');
+      this.dniUnirse = '';
+      this.listar(); // refresca
+    },
+    error: (err) => {
+      Swal.fire('Error', err?.error || 'No se pudo unir a la carpeta', 'error');
+    }
+  });
+}
 }

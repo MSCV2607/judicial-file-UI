@@ -1,12 +1,16 @@
 <div class="gradient-bg">
-    <app-nav-bar></app-nav-bar>
+  <app-nav-bar></app-nav-bar>
   <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="text-primary">📁 Mis Carpetas</h2>
-      <button class="btn btn-success" (click)="mostrarFormulario = !mostrarFormulario">
-        {{ mostrarFormulario ? 'Ocultar formulario' : 'Crear nuevo expediente' }}
-      </button>
+      <h2 class="text-primary">📁 Mis Expedientes</h2>
+      <div class="d-flex gap-2">
+        <button class="btn btn-success" (click)="mostrarFormulario = !mostrarFormulario">
+          {{ mostrarFormulario ? 'Ocultar formulario' : 'Crear nuevo expediente' }}
+        </button>
+      </div>
     </div>
+
+    
 
     <div *ngIf="mostrarFormulario" class="card p-3 mb-4">
       <h5>Nuevo expediente</h5>
@@ -120,6 +124,13 @@
             </li>
           </ul>
         </div>
+      </div>
+    </div>
+    <!-- CAMPO UNIRSE -->
+    <div class="d-flex justify-content-end mb-3">
+      <div class="input-group" style="max-width: 300px;">
+        <input type="text" class="form-control" [(ngModel)]="dniUnirse" placeholder="DNI para unirse" />
+        <button class="btn btn-success" (click)="unirseACarpeta()">Unirse</button>
       </div>
     </div>
   </div>

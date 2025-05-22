@@ -113,5 +113,12 @@ agregarArchivos(dni: string, archivos: File[], descripcion: string): Observable<
   });
 }
 
+unirseACarpeta(dni: string): Observable<string> {
+  return this.http.post(`${this.apiUrl}/unirse?dni=${dni}`, null, {
+    headers: this.getAuthHeaders(),
+    responseType: 'text'
+  });
+}
+
 }
 
