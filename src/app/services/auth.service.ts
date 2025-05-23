@@ -21,11 +21,15 @@ export interface LoginPayload {
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/auth';
+
   private readonly TOKEN_KEY = 'jwtToken';
+  private readonly USER_ID_KEY = 'id';
+  private readonly USERNAME_KEY = 'username';
+
   private isBrowser = typeof window !== 'undefined';
 
-  private authStatus = new BehaviorSubject<boolean>(this.hasToken());
-  authStatus$ = this.authStatus.asObservable();
+  private authStatusSubject = new BehaviorSubject<boolean>(this.hasToken());
+  authStatus$ = this.authStatusSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -42,7 +46,9 @@ export class AuthService {
       tap((res: any) => {
         if (this.isBrowser && res.token) {
           localStorage.setItem(this.TOKEN_KEY, res.token);
-          this.authStatus.next(true);
+          localStorage.setItem(this.USER_ID_KEY, res.id.toString());
+          localStorage.setItem(this.USERNAME_KEY, res.username);
+          this.authStatusSubject.next(true);
         }
       })
     );
@@ -51,12 +57,23 @@ export class AuthService {
   logout(): void {
     if (this.isBrowser) {
       localStorage.removeItem(this.TOKEN_KEY);
-      this.authStatus.next(false);
+      localStorage.removeItem(this.USER_ID_KEY);
+      localStorage.removeItem(this.USERNAME_KEY);
+      this.authStatusSubject.next(false);
     }
   }
 
   getToken(): string | null {
     return this.isBrowser ? localStorage.getItem(this.TOKEN_KEY) : null;
+  }
+
+  getUserId(): number | null {
+    const id = this.isBrowser ? localStorage.getItem(this.USER_ID_KEY) : null;
+    return id ? parseInt(id, 10) : null;
+  }
+
+  getUsername(): string | null {
+    return this.isBrowser ? localStorage.getItem(this.USERNAME_KEY) : null;
   }
 
   isLoggedIn(): boolean {

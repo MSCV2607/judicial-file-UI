@@ -1,34 +1,58 @@
-
 <div class="container py-4">
+  <app-nav-bar></app-nav-bar>
   <div class="row">
+    <!-- Lista de usuarios -->
     <div class="col-md-4">
       <div class="list-group">
-        <h5>Usuarios disponibles</h5>
-        <button *ngFor="let usuario of usuarios" (click)="seleccionarReceptor(usuario)"
+        <h5 class="mb-3">Usuarios disponibles</h5>
+        <button *ngFor="let usuario of usuarios"
+                (click)="seleccionarReceptor(usuario)"
                 class="list-group-item list-group-item-action"
                 [class.active]="usuario.id === receptorId">
           {{ usuario.nombreCompleto }} ({{ usuario.username }})
         </button>
       </div>
     </div>
+
+    <!-- Área de chat -->
     <div class="col-md-8">
       <div class="card">
         <div class="card-header bg-primary text-white">
           Conversación con {{ receptorNombre || '...' }}
         </div>
-        <div class="card-body overflow-auto" style="height: 400px;" #chatScroll>
-          <div *ngFor="let mensaje of mensajes">
-            <div [class.text-end]="mensaje.emisorId === usuarioActualId">
+
+        <div class="card-body overflow-auto bg-light" style="height: 400px;" #chatScroll>
+          <div *ngIf="mensajes.length === 0" class="text-center text-muted mt-4">
+            No hay mensajes aún.
+          </div>
+
+          <div *ngFor="let mensaje of mensajes" class="mb-3">
+            <div [ngClass]="{
+                'text-end': mensaje.emisorId === usuarioActualId,
+                'text-start': mensaje.emisorId !== usuarioActualId
+              }">
               <span class="badge bg-secondary">{{ mensaje.emisorUsername }}</span>
-              <p class="mb-1">{{ mensaje.contenido }}</p>
-              <small class="text-muted">{{ mensaje.fechaEnvio | date:'short' }}</small>
+              <div class="p-2 d-inline-block rounded"
+                   [ngClass]="{
+                     'bg-primary text-white': mensaje.emisorId === usuarioActualId,
+                     'bg-white border': mensaje.emisorId !== usuarioActualId
+                   }"
+                   style="max-width: 75%;">
+                {{ mensaje.contenido }}
+              </div>
+              <div class="text-muted small">
+                {{ mensaje.fechaEnvio | date:'short' }}
+              </div>
             </div>
-            <hr>
           </div>
         </div>
+
         <div class="card-footer">
           <div class="input-group">
-            <input [(ngModel)]="nuevoMensaje" class="form-control" placeholder="Escribí tu mensaje...">
+            <input [(ngModel)]="nuevoMensaje"
+                   class="form-control"
+                   placeholder="Escribí tu mensaje..."
+                   (keyup.enter)="enviarMensaje()" />
             <button class="btn btn-primary" (click)="enviarMensaje()">Enviar</button>
           </div>
         </div>
@@ -36,4 +60,3 @@
     </div>
   </div>
 </div>
-

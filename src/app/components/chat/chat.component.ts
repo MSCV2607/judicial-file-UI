@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ChatService } from '../../services/chat.service';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from "../nav-bar/nav-bar.component";
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, NavBarComponent],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent implements OnInit {
@@ -26,9 +27,16 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     const userId = localStorage.getItem('id');
-    this.usuarioActualId = userId ? parseInt(userId, 10) : 0;
 
-    // Si había una conversación activa antes, restaurarla
+    if (userId) {
+      this.usuarioActualId = parseInt(userId, 10);
+    } else {
+      Swal.fire('Error', 'No se pudo recuperar el ID del usuario actual', 'error');
+      return;
+    }
+
+    this.cargarUsuarios();
+
     const receptorGuardado = localStorage.getItem('receptorId');
     const nombreGuardado = localStorage.getItem('receptorNombre');
 
@@ -37,8 +45,6 @@ export class ChatComponent implements OnInit {
       this.receptorNombre = nombreGuardado;
       this.cargarMensajes();
     }
-
-    this.cargarUsuarios();
   }
 
   cargarUsuarios(): void {
@@ -56,8 +62,7 @@ export class ChatComponent implements OnInit {
     this.receptorId = usuario.id;
     this.receptorNombre = usuario.nombreCompleto;
 
-    localStorage.setItem('receptorId', (this.receptorId ?? '').toString());
-
+    localStorage.setItem('receptorId', (this.receptorId ?? 0).toString());
     localStorage.setItem('receptorNombre', this.receptorNombre);
 
     this.cargarMensajes();
