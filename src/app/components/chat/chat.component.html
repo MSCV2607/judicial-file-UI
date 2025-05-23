@@ -1,4 +1,39 @@
-<div class="gradient-bg">
-    <app-nav-bar></app-nav-bar>
-  <img src="../../../assets/Img/buhoEnProceso.png" alt="En proceso" class="enproceso mb-0" />
+
+<div class="container py-4">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="list-group">
+        <h5>Usuarios disponibles</h5>
+        <button *ngFor="let usuario of usuarios" (click)="seleccionarReceptor(usuario)"
+                class="list-group-item list-group-item-action"
+                [class.active]="usuario.id === receptorId">
+          {{ usuario.nombreCompleto }} ({{ usuario.username }})
+        </button>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          Conversación con {{ receptorNombre || '...' }}
+        </div>
+        <div class="card-body overflow-auto" style="height: 400px;" #chatScroll>
+          <div *ngFor="let mensaje of mensajes">
+            <div [class.text-end]="mensaje.emisorId === usuarioActualId">
+              <span class="badge bg-secondary">{{ mensaje.emisorUsername }}</span>
+              <p class="mb-1">{{ mensaje.contenido }}</p>
+              <small class="text-muted">{{ mensaje.fechaEnvio | date:'short' }}</small>
+            </div>
+            <hr>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="input-group">
+            <input [(ngModel)]="nuevoMensaje" class="form-control" placeholder="Escribí tu mensaje...">
+            <button class="btn btn-primary" (click)="enviarMensaje()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
