@@ -1,62 +1,67 @@
-<div class="container py-4">
+<div class="gradient-bg">
   <app-nav-bar></app-nav-bar>
-  <div class="row">
-    <!-- Lista de usuarios -->
-    <div class="col-md-4">
-      <div class="list-group">
-        <h5 class="mb-3">Usuarios disponibles</h5>
-        <button *ngFor="let usuario of usuarios"
-                (click)="seleccionarReceptor(usuario)"
-                class="list-group-item list-group-item-action"
-                [class.active]="usuario.id === receptorId">
-          {{ usuario.nombreCompleto }} ({{ usuario.username }})
-        </button>
-      </div>
-    </div>
 
-    <!-- Área de chat -->
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header bg-primary text-white">
-          Conversación con {{ receptorNombre || '...' }}
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-12 chat-container p-0">
+        <!-- Lista de usuarios -->
+        <div class="col-md-4 bg-light border-end">
+          <div class="p-3 border-bottom">
+            <h5 class="mb-0 text-primary fw-bold">Usuarios disponibles</h5>
+          </div>
+          <div class="list-group list-group-flush">
+            <button *ngFor="let usuario of usuarios"
+                    (click)="seleccionarReceptor(usuario)"
+                    class="list-group-item list-group-item-action"
+                    [class.active]="usuario.id === receptorId">
+              {{ usuario.nombreCompleto }} ({{ usuario.username }})
+            </button>
+          </div>
         </div>
 
-        <div class="card-body overflow-auto bg-light" style="height: 400px;" #chatScroll>
-          <div *ngIf="mensajes.length === 0" class="text-center text-muted mt-4">
-            No hay mensajes aún.
+        <!-- Área de chat -->
+        <div class="col-md-8 d-flex flex-column chat-box">
+          <!-- Encabezado de la conversación -->
+          <div class="chat-header">
+            <h6 class="mb-0">Conversación con {{ receptorNombre || '...' }}</h6>
           </div>
 
-          <div *ngFor="let mensaje of mensajes" class="mb-3">
-            <div [ngClass]="{
-                'text-end': mensaje.emisorId === usuarioActualId,
-                'text-start': mensaje.emisorId !== usuarioActualId
-              }">
-              <span class="badge bg-secondary">{{ mensaje.emisorUsername }}</span>
-              <div class="p-2 d-inline-block rounded"
-                   [ngClass]="{
-                     'bg-primary text-white': mensaje.emisorId === usuarioActualId,
-                     'bg-white border': mensaje.emisorId !== usuarioActualId
-                   }"
-                   style="max-width: 75%;">
-                {{ mensaje.contenido }}
-              </div>
-              <div class="text-muted small">
-                {{ mensaje.fechaEnvio | date:'short' }}
+          <!-- Mensajes -->
+          <div class="chat-messages" #chatScroll>
+            <div *ngIf="mensajes.length === 0" class="text-center text-muted mt-4">
+              No hay mensajes aún.
+            </div>
+
+            <div *ngFor="let mensaje of mensajes" class="mb-3">
+              <div [ngClass]="{ 'text-end': mensaje.emisorId === usuarioActualId, 'text-start': mensaje.emisorId !== usuarioActualId }">
+                <small class="d-block text-muted mb-1">
+                  {{ mensaje.emisorUsername }} • {{ mensaje.fechaEnvio | date:'short' }}
+                </small>
+                <div class="d-inline-block p-2 rounded"
+                     [ngClass]="{
+                       'bg-primary text-white': mensaje.emisorId === usuarioActualId,
+                       'bg-white border': mensaje.emisorId !== usuarioActualId
+                     }"
+                     style="max-width: 70%;">
+                  {{ mensaje.contenido }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="card-footer">
-          <div class="input-group">
-            <input [(ngModel)]="nuevoMensaje"
-                   class="form-control"
-                   placeholder="Escribí tu mensaje..."
-                   (keyup.enter)="enviarMensaje()" />
-            <button class="btn btn-primary" (click)="enviarMensaje()">Enviar</button>
+          <!-- Formulario de envío -->
+          <div class="chat-footer">
+            <div class="input-group">
+              <input [(ngModel)]="nuevoMensaje"
+                     class="form-control"
+                     placeholder="Escribí tu mensaje..."
+                     (keyup.enter)="enviarMensaje()" />
+              <button class="btn btn-primary" (click)="enviarMensaje()">Enviar</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+

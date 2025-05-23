@@ -1,14 +1,44 @@
 .gradient-bg {
   background: linear-gradient(to bottom, #000428, #004e92);
   min-height: 100vh;
-
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 
-.enproceso {
-  width: 500px; 
-  height: auto;
-  filter: drop-shadow(0 0 10px rgba(177, 10, 10, 0.5));
+.chat-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  height: 90vh;
+  overflow: hidden;
+  display: flex;
 }
+
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background: #f8f9fa;
+  min-height: 0;
+}
+
+.chat-header {
+  padding: 1rem;
+  background-color: #004e92;
+  color: white;
+  font-weight: 600;
+  border-bottom: 1px solid #ccc;
+}
+
+.chat-footer {
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #ccc;
+}
+

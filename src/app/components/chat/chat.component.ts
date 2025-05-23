@@ -1,4 +1,3 @@
-// src/app/components/chat/chat.component.ts
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +11,7 @@ import { NavBarComponent } from "../nav-bar/nav-bar.component";
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule, NavBarComponent],
   templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
   usuarios: any[] = [];
