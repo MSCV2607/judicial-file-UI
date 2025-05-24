@@ -1,3 +1,4 @@
+// src/app/components/carpetas/carpetas.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,8 +17,8 @@ import { NavBarComponent } from "../nav-bar/nav-bar.component";
 export class CarpetasComponent implements OnInit {
   carpetas: any[] = [];
   busqueda: string = '';
-  archivos: { [dni: string]: string[] } = {};
-  archivosVisibles: { [dni: string]: boolean } = {};
+  archivos: { [id: number]: string[] } = {};
+  archivosVisibles: { [id: number]: boolean } = {};
 
   mostrarFormulario = false;
   nombre: string = '';
@@ -26,13 +27,14 @@ export class CarpetasComponent implements OnInit {
   edad: number | null = null;
   telefono: string = '';
   correo: string = '';
+  nombreCarpeta: string = '';
   archivosNuevos: File[] = [];
 
-  dniParaActualizar: string = '';
+  carpetaIdActualizar: number | null = null;
   archivosParaActualizar: File[] = [];
   descripcionActualizacion: string = '';
 
-  dniUnirse: string = '';
+  idUnirse: string = '';
 
   ordenSeleccionado: string = '';
 
@@ -61,30 +63,30 @@ export class CarpetasComponent implements OnInit {
     });
   }
 
-  verArchivos(dni: string): void {
-    if (this.archivosVisibles[dni]) {
-      this.archivosVisibles[dni] = false;
+  verArchivos(id: number): void {
+    if (this.archivosVisibles[id]) {
+      this.archivosVisibles[id] = false;
       return;
     }
 
-    this.carpetaService.verArchivos(dni).subscribe({
-      next: (data: string[]) => {
-        this.archivos[dni] = data;
-        this.archivosVisibles[dni] = true;
+    this.carpetaService.verArchivos(id).subscribe({
+      next: (data) => {
+        this.archivos[id] = data;
+        this.archivosVisibles[id] = true;
       },
-      error: () => Swal.fire('Error', 'Error al obtener archivos', 'error')
+      error: () => Swal.fire('Error', 'No se pudieron obtener los archivos', 'error')
     });
   }
 
-  descargarZip(dni: string): void {
-    this.carpetaService.descargarCarpetaZip(dni);
+  descargarZip(id: number): void {
+    this.carpetaService.descargarCarpetaZip(id);
   }
 
-  descargarArchivo(dni: string, archivo: string): void {
-    this.carpetaService.descargarArchivo(dni, archivo);
+  descargarArchivo(id: number, archivo: string): void {
+    this.carpetaService.descargarArchivo(id, archivo);
   }
 
-  eliminarArchivo(dni: string, archivo: string): void {
+  eliminarArchivo(id: number, archivo: string): void {
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'Vas a eliminar un archivo. Escribe una descripción:',
@@ -92,13 +94,13 @@ export class CarpetasComponent implements OnInit {
       inputPlaceholder: 'Descripción del cambio',
       showCancelButton: true,
       confirmButtonText: 'Eliminar'
-    }).then(result => {
+    }).then((result) => {
       if (result.isConfirmed && result.value) {
         const descripcion = result.value;
-        this.carpetaService.eliminarArchivo(dni, archivo, descripcion).subscribe({
+        this.carpetaService.eliminarArchivo(id, archivo, descripcion).subscribe({
           next: () => {
             Swal.fire('Eliminado', 'Archivo eliminado correctamente', 'success');
-            this.verArchivos(dni);
+            this.verArchivos(id);
           },
           error: () => Swal.fire('Error', 'No se pudo eliminar el archivo', 'error')
         });
@@ -106,7 +108,7 @@ export class CarpetasComponent implements OnInit {
     });
   }
 
-  eliminarCarpeta(dni: string): void {
+  eliminarCarpeta(id: number): void {
     Swal.fire({
       title: '¿Eliminar carpeta?',
       text: 'Esta acción es irreversible.',
@@ -116,9 +118,9 @@ export class CarpetasComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.carpetaService.eliminarCarpeta(dni).subscribe({
+        this.carpetaService.eliminarCarpeta(id).subscribe({
           next: () => {
-            this.carpetas = this.carpetas.filter(c => c.numeroCarpeta !== dni);
+            this.carpetas = this.carpetas.filter(c => c.id !== id);
             Swal.fire('Eliminado', 'La carpeta fue eliminada correctamente.', 'success');
           },
           error: (err) => {
@@ -137,8 +139,8 @@ export class CarpetasComponent implements OnInit {
   }
 
   crearCarpeta(): void {
-    if (!this.nombre || !this.apellido || !this.dni || this.archivosNuevos.length === 0) {
-      Swal.fire('Faltan datos', 'Completá todos los campos y seleccioná archivos', 'warning');
+    if (!this.nombre || !this.apellido || !this.dni || !this.nombreCarpeta || this.archivosNuevos.length === 0) {
+      Swal.fire('Faltan datos', 'Completá todos los campos obligatorios y seleccioná archivos', 'warning');
       return;
     }
 
@@ -146,6 +148,7 @@ export class CarpetasComponent implements OnInit {
     formData.append('nombre', this.nombre);
     formData.append('apellido', this.apellido);
     formData.append('dni', this.dni);
+    formData.append('nombreCarpeta', this.nombreCarpeta);
     formData.append('edad', this.edad !== null ? String(this.edad) : '0');
     formData.append('telefono', this.telefono || 'N/A');
     formData.append('correo', this.correo || 'N/A');
@@ -159,6 +162,7 @@ export class CarpetasComponent implements OnInit {
         this.nombre = '';
         this.apellido = '';
         this.dni = '';
+        this.nombreCarpeta = '';
         this.edad = null;
         this.telefono = '';
         this.correo = '';
@@ -172,6 +176,12 @@ export class CarpetasComponent implements OnInit {
     });
   }
 
+  abrirFormularioActualizacion(id: number): void {
+    this.carpetaIdActualizar = id;
+    this.descripcionActualizacion = '';
+    this.archivosParaActualizar = [];
+  }
+
   onSeleccionarArchivosActualizar(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
@@ -179,23 +189,17 @@ export class CarpetasComponent implements OnInit {
     }
   }
 
-  abrirFormularioActualizacion(dni: string): void {
-    this.dniParaActualizar = dni;
-    this.descripcionActualizacion = '';
-    this.archivosParaActualizar = [];
-  }
-
   subirArchivosActualizados(): void {
-    if (!this.archivosParaActualizar.length || !this.descripcionActualizacion) {
-      Swal.fire('Error', 'Seleccioná archivos y escribí una descripción', 'warning');
+    if (!this.descripcionActualizacion || !this.archivosParaActualizar.length || this.carpetaIdActualizar === null) {
+      Swal.fire('Error', 'Completá los campos para actualizar', 'warning');
       return;
     }
 
-    this.carpetaService.agregarArchivos(this.dniParaActualizar, this.archivosParaActualizar, this.descripcionActualizacion)
+    this.carpetaService.agregarArchivos(this.carpetaIdActualizar, this.archivosParaActualizar, this.descripcionActualizacion)
       .subscribe({
         next: () => {
-          Swal.fire('Éxito', 'Archivos actualizados correctamente', 'success');
-          this.dniParaActualizar = '';
+          Swal.fire('Actualizado', 'Archivos subidos correctamente', 'success');
+          this.carpetaIdActualizar = null;
           this.archivosParaActualizar = [];
           this.descripcionActualizacion = '';
           this.listar();
@@ -205,45 +209,44 @@ export class CarpetasComponent implements OnInit {
   }
 
   unirseACarpeta(): void {
-  if (!this.dniUnirse.trim()) {
-    Swal.fire('Error', 'Ingresá un DNI para unirte a la carpeta', 'warning');
-    return;
-  }
-
-  this.carpetaService.unirseACarpeta(this.dniUnirse.trim()).subscribe({
-    next: () => {
-      Swal.fire('Éxito', 'Te uniste a la carpeta correctamente', 'success');
-      this.dniUnirse = '';
-      this.listar(); // refresca
-    },
-    error: (err) => {
-      Swal.fire('Error', err?.error || 'No se pudo unir a la carpeta', 'error');
+    const id = parseInt(this.idUnirse.trim());
+    if (!id || isNaN(id)) {
+      Swal.fire('Error', 'Ingresá un ID válido', 'warning');
+      return;
     }
-  });
-}
 
-ordenarCarpetas(): void {
-  switch (this.ordenSeleccionado) {
-    case 'nombreAZ':
-      this.carpetas.sort((a, b) => a.descripcion.localeCompare(b.descripcion));
-      break;
-    case 'nombreZA':
-      this.carpetas.sort((a, b) => b.descripcion.localeCompare(a.descripcion));
-      break;
-    case 'actualizacionReciente':
-      this.carpetas.sort((a, b) => new Date(b.ultimaActualizacion).getTime() - new Date(a.ultimaActualizacion).getTime());
-      break;
-    case 'actualizacionVieja':
-      this.carpetas.sort((a, b) => new Date(a.ultimaActualizacion).getTime() - new Date(b.ultimaActualizacion).getTime());
-      break;
-    case 'creacionNueva':
-      this.carpetas.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
-      break;
-    case 'creacionVieja':
-      this.carpetas.sort((a, b) => new Date(a.fechaCreacion).getTime() - new Date(b.fechaCreacion).getTime());
-      break;
-    default:
-      break;
+    this.carpetaService.unirseACarpeta(id).subscribe({
+      next: () => {
+        Swal.fire('Unido', 'Te uniste a la carpeta correctamente', 'success');
+        this.idUnirse = '';
+        this.listar();
+      },
+      error: () => Swal.fire('Error', 'No se pudo unir a la carpeta', 'error')
+    });
   }
-}
+
+  ordenarCarpetas(): void {
+    switch (this.ordenSeleccionado) {
+      case 'nombreAZ':
+        this.carpetas.sort((a, b) => a.descripcion.localeCompare(b.descripcion));
+        break;
+      case 'nombreZA':
+        this.carpetas.sort((a, b) => b.descripcion.localeCompare(a.descripcion));
+        break;
+      case 'actualizacionReciente':
+        this.carpetas.sort((a, b) => new Date(b.ultimaActualizacion).getTime() - new Date(a.ultimaActualizacion).getTime());
+        break;
+      case 'actualizacionVieja':
+        this.carpetas.sort((a, b) => new Date(a.ultimaActualizacion).getTime() - new Date(b.ultimaActualizacion).getTime());
+        break;
+      case 'creacionNueva':
+        this.carpetas.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
+        break;
+      case 'creacionVieja':
+        this.carpetas.sort((a, b) => new Date(a.fechaCreacion).getTime() - new Date(b.fechaCreacion).getTime());
+        break;
+      default:
+        break;
+    }
+  }
 }
