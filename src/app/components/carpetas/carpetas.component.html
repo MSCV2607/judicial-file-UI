@@ -10,6 +10,7 @@
       </div>
     </div>
 
+    <!-- FORMULARIO -->
     <div *ngIf="mostrarFormulario" class="card p-3 mb-4">
       <h5>Nuevo expediente</h5>
       <form (ngSubmit)="crearCarpeta()" #formulario="ngForm">
@@ -47,11 +48,11 @@
       </form>
     </div>
 
+    <!-- BUSCADOR -->
     <div class="input-group mb-2">
       <input type="text" class="form-control" placeholder="Buscar por nombre, apellido, DNI o nombre de carpeta" [(ngModel)]="busqueda">
       <button class="btn btn-outline-primary" (click)="buscar()">Buscar</button>
       <button class="btn btn-outline-secondary" (click)="listar()">Reset</button>
-
       <select class="form-select ms-2" style="max-width: 220px;" [(ngModel)]="ordenSeleccionado" (change)="ordenarCarpetas()">
         <option value="">Ordenar por...</option>
         <option value="nombreAZ">Nombre (A-Z)</option>
@@ -63,10 +64,12 @@
       </select>
     </div>
 
+    <!-- MENSAJE SI NO HAY CARPETAS -->
     <div *ngIf="carpetas.length === 0">
       <p class="text-muted">No hay carpetas disponibles.</p>
     </div>
 
+    <!-- TARJETAS DE CARPETAS -->
     <div *ngFor="let carpeta of carpetas" class="card mb-3 shadow-sm border border-primary">
       <div class="card-body">
         <div class="d-flex align-items-center justify-content-between">
@@ -74,6 +77,7 @@
           <span class="badge bg-info">{{ carpeta.estado }}</span>
         </div>
         <hr class="my-2">
+
         <div class="row mb-1">
           <div class="col-sm-6">
             <strong>ID Carpeta:</strong> {{ carpeta.id }}
@@ -82,21 +86,16 @@
             <strong>Cliente:</strong> {{ carpeta.descripcion }}
           </div>
         </div>
+
         <div class="row mb-1">
           <div class="col-sm-6">
             <strong>Edad:</strong> {{ carpeta.clientes?.[0]?.edad ?? 'N/A' }}
           </div>
           <div class="col-sm-6">
-            <strong>Teléfono:</strong>
-            <a *ngIf="carpeta.clientes?.[0]?.telefono && carpeta.clientes[0].telefono !== 'N/A'"
-               [href]="'https://wa.me/' + carpeta.clientes[0].telefono"
-               target="_blank"
-               style="text-decoration: none; color: inherit;">
-              {{ carpeta.clientes[0].telefono }}
-            </a>
-            <span *ngIf="!carpeta.clientes?.[0]?.telefono || carpeta.clientes[0].telefono === 'N/A'">N/A</span>
+            <strong>DNI:</strong> {{ carpeta.clientes?.[0]?.persona?.dni ?? 'N/A' }}
           </div>
         </div>
+
         <div class="row mb-1">
           <div class="col-sm-6">
             <strong>Correo:</strong>
@@ -108,15 +107,29 @@
             <span *ngIf="!carpeta.clientes?.[0]?.correo || carpeta.clientes[0].correo === 'N/A'">N/A</span>
           </div>
           <div class="col-sm-6">
-            <strong>Creación:</strong> {{ carpeta.fechaCreacion }}
+            <strong>Telefono:</strong>
+            <a *ngIf="carpeta.clientes?.[0]?.telefono && carpeta.clientes[0].telefono !== 'N/A'"
+               [href]="'https://wa.me/' + carpeta.clientes[0].telefono"
+               target="_blank"
+               style="text-decoration: none; color: inherit;">
+              {{ carpeta.clientes[0].telefono }}
+            </a>
+            <span *ngIf="!carpeta.clientes?.[0]?.telefono || carpeta.clientes[0].telefono === 'N/A'">N/A</span>
           </div>
         </div>
+
         <div class="row mb-2">
-          <div class="col-sm-12">
-            <strong>Última actualización:</strong> {{ carpeta.ultimaActualizacion | date:'short' }}
+          <div class="col-sm-6">
+            <strong>Ultima actualiza:</strong> {{ carpeta.ultimaActualizacion | date:'short' }}
+          </div>
+          <div class="col-sm-6">
+            <strong>Creacion:</strong> {{ carpeta.fechaCreacion }}
           </div>
         </div>
+
         <p class="card-text text-muted"><em>{{ carpeta.descripcionUltimaActualizacion }}</em></p>
+
+        <!-- BOTONES -->
         <div class="mt-2">
           <button class="btn btn-sm btn-outline-primary me-2" (click)="verArchivos(carpeta.id)">📂 Ver Archivos</button>
           <button class="btn btn-sm btn-outline-success me-2" (click)="descargarZip(carpeta.id)">⬇️ Descargar ZIP</button>
@@ -124,6 +137,7 @@
           <button class="btn btn-sm btn-outline-danger" (click)="eliminarCarpeta(carpeta.id)">🗑️ Eliminar Carpeta</button>
         </div>
 
+        <!-- FORMULARIO DE ACTUALIZACIÓN -->
         <div *ngIf="carpetaIdActualizar === carpeta.id" class="mt-3 border-top pt-2">
           <label class="form-label">Descripción de la actualización:</label>
           <input type="text" [(ngModel)]="descripcionActualizacion" class="form-control mb-2" placeholder="Ej: Agregado expediente judicial 04-2024">
@@ -132,6 +146,7 @@
           <button class="btn btn-secondary btn-sm ms-2" (click)="carpetaIdActualizar = null">Cancelar</button>
         </div>
 
+        <!-- ARCHIVOS -->
         <div *ngIf="archivosVisibles[carpeta.id]" class="mt-3">
           <hr>
           <ul class="list-group">
@@ -147,6 +162,7 @@
       </div>
     </div>
 
+    <!-- FORMULARIO UNIRSE -->
     <div class="d-flex justify-content-end mb-3">
       <div class="input-group" style="max-width: 300px;">
         <input type="text" class="form-control" [(ngModel)]="idUnirse" placeholder="ID carpeta para unirse" />
