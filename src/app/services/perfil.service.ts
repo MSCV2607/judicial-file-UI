@@ -18,24 +18,23 @@ export class PerfilService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener datos del perfil
+
   obtenerPerfil(): Observable<PerfilUsuarioDTO> {
     return this.http.get<PerfilUsuarioDTO>(`${this.baseUrl}`);
   }
 
-  // Actualizar datos del perfil (nombre, apellido, email)
   actualizarPerfil(dto: PerfilUsuarioDTO): Observable<any> {
     return this.http.put(`${this.baseUrl}`, dto);
   }
 
-  // Subir foto de perfil
+
   subirFoto(foto: File): Observable<any> {
     const formData = new FormData();
     formData.append('foto', foto);
     return this.http.post(`${this.baseUrl}/foto`, formData);
   }
 
-  // Obtener la foto de perfil como blob (para mostrarla en <img>)
+
   obtenerFoto(): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/foto`, { responseType: 'blob' });
   }

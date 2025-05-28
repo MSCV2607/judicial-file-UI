@@ -61,7 +61,7 @@ export class PerfilComponent implements OnInit {
     this.perfilService.subirFoto(this.imagenSeleccionada).subscribe({
       next: () => {
         this.mensaje = 'Foto actualizada correctamente';
-        this.cargarFoto(); // recarga la imagen
+        this.cargarFoto();
       },
       error: () => this.mensaje = 'Error al subir la foto'
     });

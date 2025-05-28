@@ -58,18 +58,17 @@ export class CalendarioComponent {
   }
 
   crearEvento() {
-    // Agregar el evento al calendario
+ 
     this.calendarOptions.events.push({
       title: this.nuevoEvento.titulo,
       date: this.nuevoEvento.fecha,
       description: this.nuevoEvento.descripcion
     });
 
-    // Cerrar el modal
+ 
     const modal = (window as any).bootstrap.Modal.getInstance(document.getElementById('nuevoEventoModal'));
     modal.hide();
 
-    // Resetear el formulario
     this.nuevoEvento = { fecha: '', titulo: '', descripcion: '' };
   }
 }

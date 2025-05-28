@@ -1,4 +1,4 @@
-/* Sidebar */
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -15,12 +15,12 @@
   justify-content: space-between;
 }
 
-/* Sidebar cerrado */
+
 .sidebar-closed {
   transform: translateX(-100%);
 }
 
-/* Encabezado */
+
 .sidebar-header {
   padding: 10px 20px;
   color: white;
@@ -28,7 +28,7 @@
   font-size: 1.5rem;
 }
 
-/* Navegación */
+
 .nav {
   padding-left: 0;
   list-style: none;
@@ -58,12 +58,12 @@
   background-color: #0056b3;
 }
 
-/* Iconos */
+
 .nav-link i {
   margin-right: 10px;
 }
 
-/* Botón ☰ */
+
 .toggle-btn {
   position: fixed;
   top: 20px;
@@ -76,12 +76,12 @@
   cursor: pointer;
 }
 
-/* Logout abajo */
+
 .logout-container {
   padding: 20px;
 }
 
-/* Estilo especial para logout */
+
 .logout-link:hover {
-  background-color: #dc3545; /* rojo */
+  background-color: #dc3545; 
 }

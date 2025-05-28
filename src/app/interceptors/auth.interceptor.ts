@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 }
 
-// Este es el provider que se importa en main.ts
+
 export const authInterceptorProvider = {
   provide: HTTP_INTERCEPTORS,
   useClass: AuthInterceptor,

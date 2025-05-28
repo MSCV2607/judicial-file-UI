@@ -42,7 +42,7 @@ export const routes: Routes = [
   {
     path: 'calendario',
     component: CalendarioComponent,
-    canActivate: [AuthGuard]  // Protegida
+    canActivate: [AuthGuard]
   },
 
 ];

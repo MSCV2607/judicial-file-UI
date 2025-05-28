@@ -8,8 +8,8 @@ import { authInterceptorProvider } from './app/interceptors/auth.interceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideHttpClient(withInterceptorsFromDi()), // Usa interceptores registrados en DI
+    provideHttpClient(withInterceptorsFromDi()), 
     provideRouter(routes),
-    authInterceptorProvider                     // Aquí está tu interceptor registrado 👍
+    authInterceptorProvider                     
   ]
 }).catch(err => console.error(err));
